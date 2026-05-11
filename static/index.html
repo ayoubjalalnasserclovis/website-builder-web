@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Improver | AI Agentic Builder</title>
+    <meta name="description" content="Turn any website link or raw text into a premium, highly-converting website in seconds.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/0000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>SiteImprover</span>
+            </div>
+            <nav>
+                <a href="https://github.com/website-builder" target="_blank" class="nav-link">About</a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <div class="badge">✨ Powered by Agentic AI</div>
+            <h1>Transform your site into a <span class="gradient-text">Premium Experience</span></h1>
+            <p>Provide a website link or text, and our AI agents will redesign, rewrite, and rebuild it with a world-class brand DNA in seconds.</p>
+        </section>
+
+        <section class="generator-card glass-panel">
+            <form id="generate-form">
+                <div class="input-group">
+                    <label for="company_name">Company Name (Optional)</label>
+                    <input type="text" id="company_name" name="company_name" placeholder="e.g. Acme Corp">
+                </div>
+                
+                <div class="input-group">
+                    <label for="input_data">Website Link or Raw Text</label>
+                    <textarea id="input_data" name="input_data" required placeholder="https://example.com or paste your content here..." rows="4"></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn" class="primary-btn">
+                    <span class="btn-text">Generate Improved Site</span>
+                    <span class="btn-icon">→</span>
+                    <div class="spinner" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div id="result-container" class="result-container hidden">
+                <div class="success-message">
+                    <div class="success-icon">✓</div>
+                    <h3>Website Generated Successfully!</h3>
+                    <p id="cost-display">Cost: $0.00</p>
+                </div>
+                <div class="actions">
+                    <a href="#" id="preview-link" target="_blank" class="secondary-btn">Preview Live Site</a>
+                </div>
+            </div>
+            
+            <div id="error-container" class="error-container hidden">
+                <div class="error-icon">⚠</div>
+                <div class="error-text">
+                    <h3>Generation Failed</h3>
+                    <p id="error-message">Something went wrong.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

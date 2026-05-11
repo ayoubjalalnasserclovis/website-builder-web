@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ branding.name }} — {{ branding.subtitle }}</title>
+  <meta name="description" content="{{ meta_description }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="{{ fonts_url }}" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:           {{ brand_tokens.color_bg }};
+      --surface:      {{ brand_tokens.color_surface }};
+      --text:         {{ brand_tokens.color_text }};
+      --text-muted:   {{ brand_tokens.color_text_muted }};
+      --primary:      {{ brand_tokens.color_primary }};
+      --secondary:    {{ brand_tokens.color_secondary }};
+      --footer-bg:    {{ brand_tokens.color_footer_bg }};
+      --font-display: '{{ brand.typography.display_font }}', Georgia, serif;
+      --font-body:    '{{ brand.typography.body_font }}', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-weight: 400;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .serif { font-family: var(--font-display); }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+
+    a { color: inherit; }
+
+    .topbar {
+      background: var(--primary);
+      color: var(--bg);
+      font-size: 12.5px;
+      letter-spacing: 0.04em;
+      padding: 11px 0;
+    }
+    .topbar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .topbar a { text-decoration: none; transition: color .2s; }
+    .topbar a:hover { color: var(--secondary); }
+    .topbar .pipe { opacity: .35; margin: 0 14px; }
+
+    nav.main {
+      position: sticky;
+      top: 0;
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid color-mix(in srgb, var(--primary) 8%, transparent);
+      z-index: 100;
+    }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 22px 0; }
+    .brand {
+      font-family: var(--font-display);
+      font-size: 22px; font-weight: 500;
+      letter-spacing: -0.015em;
+      color: var(--primary);
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .brand-mark {
+      width: 28px; height: 28px;
+      border: 1px solid var(--primary);
+      border-radius: 50%;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 600;
+    }
+    .brand small {
+      font-family: var(--font-body);
+      font-weight: 400; font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: block;
+    }
+    .nav-links { display: flex; gap: 38px; list-style: none; margin: 0; padding: 0; }
+    .nav-links a {
+      color: var(--primary); text-decoration: none;
+      font-size: 14px; letter-spacing: 0.01em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--secondary); }
+    .nav-cta { display: flex; align-items: center; gap: 18px; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 14px 26px;
+      text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: all .3s ease;
+      cursor: pointer; border: none;
+      border-radius: 1px;
+    }
+    .btn-primary { background: var(--primary); color: var(--bg); }
+    .btn-primary:hover { background: var(--secondary); color: var(--primary); }
+    .btn-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: var(--bg); }
+    .btn .arrow { display: inline-block; transition: transform .3s ease; }
+    .btn:hover .arrow { transform: translateX(4px); }
+
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--secondary);
+      font-weight: 600; margin-bottom: 24px;
+      display: inline-flex; align-items: center; gap: 14px;
+    }
+    .eyebrow::before { content: ""; width: 32px; height: 1px; background: var(--secondary); }
+
+    .hero { padding: 80px 0 120px; position: relative; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 80px; align-items: end; }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(54px, 7vw, 108px);
+      line-height: 0.98;
+      letter-spacing: -0.028em;
+      margin: 24px 0 36px;
+      color: var(--primary);
+    }
+    .hero h1 em { font-style: italic; font-weight: 400; color: var(--secondary); }
+    .hero-sub {
+      font-size: 19px; color: var(--text-muted);
+      max-width: 480px; margin: 0 0 44px;
+      line-height: 1.6;
+    }
+    .hero-cta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .hero-image {
+      aspect-ratio: 3/4;
+      /* hero_image_url is Pydantic-validated; safe to skip HTML escape (which would
+         turn '&' into '&amp;' inside the CSS string and break the URL on strict CDNs). */
+      background-image: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--primary) 35%, transparent) 100%), url('{{ hero_image_url|safe }}');
+      background-size: cover; background-position: center;
+      position: relative;
+    }
+    {% if hero.image_caption %}
+    .hero-image::after {
+      content: "{{ hero.image_caption }}";
+      position: absolute; bottom: 24px; left: 24px;
+      color: var(--bg); font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      opacity: .85;
+    }
+    {% endif %}
+    .hero-meta {
+      margin-top: 110px; padding-top: 36px;
+      border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    }
+    .hero-meta-item .num {
+      font-family: var(--font-display);
+      font-size: 36px; font-weight: 400;
+      color: var(--primary); letter-spacing: -0.02em;
+      display: block;
+    }
+    .hero-meta-item .num em { color: var(--secondary); font-style: italic; }
+    .hero-meta-item .lbl { font-size: 12.5px; color: var(--text-muted); letter-spacing: 0.04em; margin-top: 6px; }
+
+    .manifesto {
+      padding: 140px 0;
+      background: var(--primary);
+      color: var(--bg);
+      position: relative; overflow: hidden;
+    }
+    .manifesto::before {
+      content: "«";
+      position: absolute;
+      font-family: var(--font-display);
+      font-size: 720px; line-height: 0.7;
+      color: color-mix(in srgb, var(--secondary) 7%, transparent);
+      top: -40px; left: -40px;
+      pointer-events: none;
+    }
+    .manifesto-inner { position: relative; max-width: 880px; }
+    .manifesto .eyebrow { color: var(--secondary); }
+    .manifesto .eyebrow::before { background: var(--secondary); }
+    .manifesto p.lead {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(32px, 3.6vw, 52px);
+      line-height: 1.18;
+      letter-spacing: -0.018em;
+      margin: 0 0 36px;
+    }
+    .manifesto p.lead em { font-style: italic; color: var(--secondary); font-weight: 400; }
+    .manifesto p.body {
+      font-size: 17px; max-width: 620px;
+      color: color-mix(in srgb, var(--bg) 82%, transparent);
+      margin: 0;
+    }
+    .signature {
+      margin-top: 56px; padding-top: 32px;
+      border-top: 1px solid color-mix(in srgb, var(--secondary) 30%, transparent);
+      display: flex; align-items: center; gap: 20px;
+    }
+    .signature-name { font-family: var(--font-display); font-style: italic; font-size: 22px; font-weight: 400; }
+    .signature-role { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: color-mix(in srgb, var(--bg) 60%, transparent); }
+
+    .values { padding: 140px 0; background: var(--bg); }
+    .section-header { max-width: 720px; margin: 0 auto 80px; text-align: center; }
+    .section-header .eyebrow { justify-content: center; }
+    .section-header .eyebrow::after { content: ""; width: 32px; height: 1px; background: var(--secondary); }
+    .section-header h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(38px, 4.5vw, 64px);
+      line-height: 1.05;
+      letter-spacing: -0.022em;
+      margin: 0 0 20px;
+      color: var(--primary);
+    }
+    .section-header h2 em { font-style: italic; color: var(--secondary); font-weight: 400; }
+    .section-header p { font-size: 18px; color: var(--text-muted); margin: 0; line-height: 1.6; }
+
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); }
+    .value { padding: 56px 36px 56px 0; border-right: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); position: relative; }
+    .value:last-child { border-right: none; padding-right: 0; }
+    .value:not(:first-child) { padding-left: 36px; }
+    .value-num { font-family: var(--font-display); font-style: italic; font-size: 18px; color: var(--secondary); font-weight: 400; margin-bottom: 24px; display: block; }
+    .value h3 {
+      font-family: var(--font-display); font-weight: 400; font-size: 32px;
+      line-height: 1.1; letter-spacing: -0.015em;
+      margin: 0 0 18px; color: var(--primary);
+    }
+    .value p { font-size: 15.5px; color: var(--text-muted); margin: 0; line-height: 1.65; }
+
+    .services { padding: 140px 0; background: var(--surface); position: relative; }
+    .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; margin-top: 80px; }
+    .service {
+      padding: 48px 40px; background: var(--bg);
+      border-right: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--primary) 10%, transparent);
+      position: relative; transition: background .3s ease; cursor: pointer;
+    }
+    .service:nth-child(2n) { border-right: none; }
+    .service:nth-last-child(-n+1) { border-bottom: none; }
+    .service-large { grid-column: span 2; padding: 64px 48px; background: var(--primary); color: var(--bg); border: none; }
+    .service:hover { background: var(--primary); color: var(--bg); }
+    .service:hover .service-num { color: var(--secondary); }
+    .service:hover .service-title { color: var(--bg); }
+    .service:hover .service-desc { color: color-mix(in srgb, var(--bg) 82%, transparent); }
+    .service:hover .service-link { color: var(--secondary); border-color: var(--secondary); }
+    .service-num { font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--secondary); font-weight: 400; margin-bottom: 28px; display: block; transition: color .3s ease; }
+    .service-title { font-family: var(--font-display); font-weight: 400; font-size: 30px; letter-spacing: -0.015em; margin: 0 0 16px; color: var(--primary); transition: color .3s ease; }
+    .service-large .service-title { font-size: 42px; color: var(--bg); }
+    .service-large .service-num { color: var(--secondary); }
+    .service-desc { font-size: 15.5px; color: var(--text-muted); line-height: 1.65; margin: 0 0 28px; transition: color .3s ease; }
+    .service-large .service-desc { color: color-mix(in srgb, var(--bg) 85%, transparent); font-size: 17px; max-width: 640px; }
+    .service-link { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--primary); text-decoration: none; border-bottom: 1px solid var(--primary); padding-bottom: 4px; transition: all .3s ease; }
+    .service-large .service-link { color: var(--secondary); border-color: var(--secondary); }
+
+    .approach { padding: 140px 0; background: var(--bg); }
+    .approach-intro { display: grid; grid-template-columns: 1fr 1.4fr; gap: 100px; margin-bottom: 100px; align-items: start; }
+    .approach-intro h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(40px, 4.6vw, 64px); line-height: 1.05; letter-spacing: -0.022em; margin: 16px 0 0; color: var(--primary); }
+    .approach-intro h2 em { font-style: italic; color: var(--secondary); font-weight: 400; }
+    .approach-intro .body p { font-size: 17px; color: var(--text-muted); line-height: 1.7; margin: 0 0 18px; }
+    .approach-intro .body p:first-child::first-letter {
+      font-family: var(--font-display); font-size: 64px; float: left;
+      line-height: 0.85; padding-right: 12px; padding-top: 6px;
+      color: var(--primary); font-weight: 400;
+    }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); padding-top: 56px; }
+    .step-num { font-family: var(--font-display); font-weight: 300; font-size: 64px; color: var(--secondary); letter-spacing: -0.02em; line-height: 1; display: block; margin-bottom: 24px; }
+    .step h4 { font-family: var(--font-display); font-weight: 500; font-size: 22px; margin: 0 0 14px; color: var(--primary); }
+    .step p { font-size: 15px; color: var(--text-muted); line-height: 1.65; margin: 0; }
+
+    .testimonial {
+      padding: 160px 0;
+      background: radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--secondary) 18%, transparent), transparent 40%), var(--primary);
+      color: var(--bg);
+    }
+    .testimonial-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+    .testimonial .eyebrow { color: var(--secondary); justify-content: center; }
+    .testimonial .eyebrow::before, .testimonial .eyebrow::after { content: ""; width: 32px; height: 1px; background: var(--secondary); }
+    .testimonial-quote { font-family: var(--font-display); font-weight: 300; font-style: italic; font-size: clamp(26px, 2.8vw, 38px); line-height: 1.4; letter-spacing: -0.01em; margin: 32px 0 48px; }
+    .testimonial-quote::before { content: "« "; color: var(--secondary); }
+    .testimonial-quote::after { content: " »"; color: var(--secondary); }
+    .testimonial-attr { display: inline-flex; align-items: center; gap: 16px; }
+    .testimonial-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--secondary); display: inline-flex; align-items: center; justify-content: center; color: var(--primary); font-family: var(--font-display); font-weight: 500; font-size: 17px; }
+    .testimonial-name { font-family: var(--font-display); font-size: 18px; font-weight: 400; }
+    .testimonial-role { font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: color-mix(in srgb, var(--bg) 60%, transparent); display: block; margin-top: 4px; }
+
+    .contact { padding: 140px 0; background: var(--bg); }
+    .contact-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 100px; align-items: start; }
+    .contact h2 { font-family: var(--font-display); font-weight: 300; font-size: clamp(42px, 5vw, 76px); line-height: 1; letter-spacing: -0.025em; margin: 16px 0 28px; color: var(--primary); }
+    .contact h2 em { font-style: italic; color: var(--secondary); font-weight: 400; }
+    .contact-lead { font-size: 18px; color: var(--text-muted); max-width: 460px; line-height: 1.65; margin: 0 0 48px; }
+    .contact-info { border-top: 1px solid color-mix(in srgb, var(--primary) 15%, transparent); padding-top: 28px; }
+    .contact-info-item { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid color-mix(in srgb, var(--primary) 8%, transparent); }
+    .contact-info-item .lbl { font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+    .contact-info-item .val { font-family: var(--font-display); font-size: 19px; color: var(--primary); text-decoration: none; }
+    .contact-info-item a.val:hover { color: var(--secondary); }
+
+    .contact-form { background: var(--primary); color: var(--bg); padding: 56px 48px; }
+    .contact-form h3 { font-family: var(--font-display); font-weight: 400; font-size: 28px; letter-spacing: -0.015em; margin: 0 0 8px; }
+    .contact-form p { font-size: 14px; color: color-mix(in srgb, var(--bg) 70%, transparent); margin: 0 0 32px; }
+    .form-row { margin-bottom: 22px; }
+    .form-row label { display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: color-mix(in srgb, var(--bg) 65%, transparent); margin-bottom: 8px; font-weight: 500; }
+    .form-row input, .form-row textarea {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1px solid color-mix(in srgb, var(--bg) 25%, transparent);
+      padding: 10px 0;
+      color: var(--bg);
+      font-family: var(--font-body); font-size: 16px;
+      transition: border-color .25s;
+    }
+    .form-row input:focus, .form-row textarea:focus { outline: none; border-bottom-color: var(--secondary); }
+    .form-row textarea { resize: vertical; min-height: 90px; }
+    .form-cta { width: 100%; justify-content: center; margin-top: 18px; background: var(--secondary); color: var(--primary); }
+    .form-cta:hover { background: var(--bg); }
+
+    footer { background: var(--footer-bg); color: color-mix(in srgb, var(--bg) 70%, transparent); padding: 80px 0 32px; font-size: 14px; }
+    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 60px; padding-bottom: 56px; border-bottom: 1px solid color-mix(in srgb, var(--bg) 10%, transparent); }
+    .footer-brand .brand { color: var(--bg); }
+    .footer-brand small { color: color-mix(in srgb, var(--bg) 50%, transparent); }
+    .footer-brand p { font-size: 14px; line-height: 1.6; margin: 20px 0 0; max-width: 280px; }
+    .footer-col h5 { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--secondary); font-weight: 600; margin: 0 0 22px; }
+    .footer-col ul { list-style: none; padding: 0; margin: 0; }
+    .footer-col li { margin-bottom: 12px; }
+    .footer-col a { color: color-mix(in srgb, var(--bg) 70%, transparent); text-decoration: none; transition: color .2s; }
+    .footer-col a:hover { color: var(--secondary); }
+    .footer-bottom { padding-top: 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 12.5px; color: color-mix(in srgb, var(--bg) 50%, transparent); }
+    .footer-bottom a { color: inherit; text-decoration: none; }
+    .footer-bottom a:hover { color: var(--secondary); }
+
+    @media (max-width: 960px) {
+      .hero-grid, .approach-intro, .contact-grid { grid-template-columns: 1fr; gap: 56px; }
+      .hero-image { aspect-ratio: 4/3; }
+      .hero-meta { margin-top: 40px; }
+      .values-grid, .steps, .footer-grid { grid-template-columns: 1fr; }
+      .value, .footer-col { border-right: none; padding: 36px 0; border-bottom: 1px solid color-mix(in srgb, var(--primary) 10%, transparent); }
+      .value:not(:first-child) { padding-left: 0; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service, .service-large { grid-column: span 1; padding: 40px 28px; }
+      .nav-links { display: none; }
+      .topbar .pipe { display: none; }
+      .footer-grid { padding-bottom: 36px; }
+      .contact-form { padding: 40px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  {# ----- TOP BAR ----- #}
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <div>
+        <a href="tel:{{ branding.phone_tel }}">{{ branding.phone }}</a>
+        <span class="pipe">·</span>
+        <a href="mailto:{{ branding.email }}">{{ branding.email }}</a>
+      </div>
+      <div>
+        Cabinet indépendant
+        {% if branding.professional_membership %}
+          <span class="pipe">·</span>
+          Membre <strong style="color:var(--secondary);font-weight:500;">{{ branding.professional_membership }}</strong>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {# ----- NAV ----- #}
+  <nav class="main">
+    <div class="container nav-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark serif">{{ branding.letter }}</span>
+        <span>
+          {{ branding.name }}
+          <small>{{ branding.subtitle }}</small>
+        </span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#approche">Notre approche</a></li>
+        <li><a href="#services">Expertises</a></li>
+        <li><a href="#temoignage">Témoignages</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#contact" class="btn btn-primary">Prendre rendez-vous <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </nav>
+
+  {# ----- HERO ----- #}
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">{{ hero.eyebrow }}</span>
+          <h1>{{ hero.h1_line1 }}<br>{{ hero.h1_line2 }}<br>{{ hero.h1_line3_before }}<em>{{ hero.h1_line3_emphasis }}</em>{{ hero.h1_line3_after }}</h1>
+          <p class="hero-sub">{{ hero.subtitle }}</p>
+          <div class="hero-cta">
+            <a href="#contact" class="btn btn-primary">{{ hero.cta_primary }} <span class="arrow">→</span></a>
+            <a href="#approche" class="btn btn-outline">{{ hero.cta_secondary }}</a>
+          </div>
+        </div>
+        <div class="hero-image"></div>
+      </div>
+
+      <div class="hero-meta">
+        {% for m in hero.metrics %}
+        <div class="hero-meta-item">
+          <span class="num serif">{{ m.value | replace('+', '<em>+</em>') | replace('%', '<em>%</em>') | safe }}</span>
+          <span class="lbl">{{ m.label }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ----- MANIFESTO ----- #}
+  <section class="manifesto">
+    <div class="container manifesto-inner">
+      <span class="eyebrow">{{ manifesto.eyebrow }}</span>
+      <p class="lead">{{ manifesto.quote_before }}<em>{{ manifesto.quote_emphasis }}</em>{{ manifesto.quote_after }}</p>
+      <p class="body">{{ manifesto.body }}</p>
+      <div class="signature">
+        <div>
+          <div class="signature-name serif">{{ manifesto.founder_name }}</div>
+          <div class="signature-role">{{ manifesto.founder_role }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ----- VALUES ----- #}
+  <section class="values" id="approche">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">{{ values.eyebrow }}</span>
+        <h2>{{ values.h2_main }} <em>{{ values.h2_emphasis }}</em></h2>
+        <p>{{ values.intro }}</p>
+      </div>
+
+      <div class="values-grid">
+        {% set _roman = ['i.', 'ii.', 'iii.'] %}
+        {% for v in values.entries %}
+        <div class="value">
+          <span class="value-num serif">{{ _roman[loop.index0] }}</span>
+          <h3>{{ v.title }}</h3>
+          <p>{{ v.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ----- SERVICES ----- #}
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">{{ services.eyebrow }}</span>
+        <h2>{{ services.h2_main }} <em>{{ services.h2_emphasis }}</em></h2>
+        <p>{{ services.intro }}</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service service-large">
+          <span class="service-num serif">{{ services.main_service.num }}</span>
+          <h3 class="service-title serif">{{ services.main_service.title }}</h3>
+          <p class="service-desc">{{ services.main_service.description }}</p>
+          <a href="#contact" class="service-link">En savoir plus</a>
+        </div>
+
+        {% for s in services.other_services %}
+        <div class="service">
+          <span class="service-num serif">{{ s.num }}</span>
+          <h3 class="service-title serif">{{ s.title }}</h3>
+          <p class="service-desc">{{ s.description }}</p>
+          <a href="#contact" class="service-link">En savoir plus</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ----- APPROACH ----- #}
+  <section class="approach">
+    <div class="container">
+      <div class="approach-intro">
+        <div>
+          <span class="eyebrow">{{ approach.eyebrow }}</span>
+          <h2>{{ approach.h2_main }} <em>{{ approach.h2_emphasis }}</em></h2>
+        </div>
+        <div class="body">
+          <p>{{ approach.body_p1 }}</p>
+          <p>{{ approach.body_p2 }}</p>
+        </div>
+      </div>
+
+      <div class="steps">
+        {% for step in approach.steps %}
+        <div class="step">
+          <span class="step-num serif">{{ step.num }}</span>
+          <h4>{{ step.title }}</h4>
+          <p>{{ step.body }}</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ----- TESTIMONIAL ----- #}
+  <section class="testimonial" id="temoignage">
+    <div class="container testimonial-inner">
+      <span class="eyebrow">{{ testimonial.eyebrow }}</span>
+      <p class="testimonial-quote">{{ testimonial.quote }}</p>
+      <div class="testimonial-attr">
+        <span class="testimonial-avatar serif">{{ testimonial.initials }}</span>
+        <div style="text-align:left;">
+          <div class="testimonial-name">{{ testimonial.name }}</div>
+          <span class="testimonial-role">{{ testimonial.role }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {# ----- CONTACT ----- #}
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <span class="eyebrow">{{ contact.eyebrow }}</span>
+          <h2>{{ contact.h2_main }} <em>{{ contact.h2_emphasis }}</em></h2>
+          <p class="contact-lead">{{ contact.lead }}</p>
+
+          <div class="contact-info">
+            <div class="contact-info-item">
+              <span class="lbl">Téléphone</span>
+              <a href="tel:{{ branding.phone_tel }}" class="val serif">{{ branding.phone }}</a>
+            </div>
+            <div class="contact-info-item">
+              <span class="lbl">Email</span>
+              <a href="mailto:{{ branding.email }}" class="val serif">{{ branding.email }}</a>
+            </div>
+            <div class="contact-info-item">
+              <span class="lbl">Cabinet</span>
+              <span class="val serif">{{ contact.office }}</span>
+            </div>
+            <div class="contact-info-item">
+              <span class="lbl">Horaires</span>
+              <span class="val serif">{{ contact.hours }}</span>
+            </div>
+          </div>
+        </div>
+
+        <form class="contact-form" onsubmit="event.preventDefault(); alert('Demande envoyée — nous vous recontactons sous 24h.');">
+          <h3>{{ contact.form_title }}</h3>
+          <p>{{ contact.form_subtitle }}</p>
+
+          <div class="form-row"><label>Nom &amp; prénom</label><input type="text" required></div>
+          <div class="form-row"><label>Email</label><input type="email" required></div>
+          <div class="form-row"><label>Téléphone</label><input type="tel"></div>
+          <div class="form-row"><label>Votre projet (en quelques mots)</label><textarea></textarea></div>
+          <button type="submit" class="btn form-cta">Envoyer ma demande <span class="arrow">→</span></button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  {# ----- FOOTER ----- #}
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="brand">
+            <span class="brand-mark serif" style="border-color:var(--secondary); color:var(--secondary);">{{ branding.letter }}</span>
+            <span>
+              {{ branding.name }}
+              <small>{{ branding.subtitle }}</small>
+            </span>
+          </a>
+          <p>{{ footer_description }}</p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Expertises</h5>
+          <ul>
+            <li><a href="#services">{{ services.main_service.title }}</a></li>
+            {% for s in services.other_services %}
+            <li><a href="#services">{{ s.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Cabinet</h5>
+          <ul>
+            <li><a href="#approche">Notre approche</a></li>
+            <li><a href="#temoignage">Témoignages</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Informations</h5>
+          <ul>
+            <li><a href="#">Mentions légales</a></li>
+            <li><a href="#">Politique de confidentialité</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© {{ current_year }} {{ branding.name }} — Tous droits réservés</div>
+        <div>
+          {%- if branding.legal_siren %}SIREN {{ branding.legal_siren }}{% endif -%}
+          {%- if branding.legal_siren and branding.legal_orias %} · {% endif -%}
+          {%- if branding.legal_orias %}ORIAS {{ branding.legal_orias }}{% endif -%}
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: website-improver
+    env: python
+    buildCommand: "pip install -e . && pip install fastapi uvicorn requests beautifulsoup4"
+    startCommand: "uvicorn app:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13
+      - key: OPENROUTER_API_KEY
+        sync: false # Requires manual entry in Render dashboard
